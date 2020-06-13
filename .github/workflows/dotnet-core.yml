@@ -1,0 +1,37 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Generate build number
+      id: buildnumber
+      uses: einaregilsson/build-number@v2 
+      with:
+        token: ${{secrets.github_token}} 
+             
+    - name: Print new build number
+      run: echo "Build number is $BUILD_NUMBER"
+    - uses: actions/checkout@v2
+      
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Install dependencies
+      working-directory: EventBase
+      run: dotnet restore
+    - name: Build
+      working-directory: EventBase
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      working-directory: EventBase
+      run: dotnet test --no-restore --verbosity normal
