@@ -26,6 +26,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
+        source-url: https://nuget.pkg.github.com/DinoRoar/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
     - name: Install dependencies
       working-directory: EventBase
       run: dotnet restore
@@ -39,8 +42,9 @@ jobs:
       working-directory: EventBase
       run: dotnet pack /p:Version="0.0.${{ steps.buildnumber.outputs.build_number }}"  EventBase.Client
     - name: Push
+
       working-directory: EventBase
-      run: dotnet nuget push EventBase.Client/bin/Debug/EventBase.Client.0.0.${{ steps.buildnumber.outputs.build_number }}.nupkg -s https://nuget.pkg.github.com/DinoRoar/index.json -k ${{secrets.github_token}} 
+      run: dotnet nuget push EventBase.Client/bin/Debug/EventBase.Client.0.0.${{ steps.buildnumber.outputs.build_number }}.nupkg -s https://nuget.pkg.github.com/DinoRoar/index.json 
  
       
       
