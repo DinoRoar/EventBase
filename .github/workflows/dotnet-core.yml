@@ -35,16 +35,15 @@ jobs:
     - name: Test
       working-directory: EventBase
       run: dotnet test --no-restore --verbosity normal
-    - name: Publish NuGet
-      uses: brandedoutcast/publish-nuget@v2.5.2
-      with:
-        # Filepath of the project to be packaged, relative to root of repository
-        PROJECT_FILE_PATH: EventBase/EventBase.Client
-        # NuGet package id, used for version detection & defaults to project name
-        PACKAGE_NAME: Dinoroar.EventBase.Client
-        VERSION_STATIC: 0.0.${{ steps.buildnumber.outputs.build_number }}
-        # API key to authenticate with NuGet server
-        NUGET_KEY: ${{ secrets.GITHUB_TOKEN }}
-        NUGET_SOURCE: https://nuget.pkg.github.com/DinoRoar/
+    - name: Pack
+      working-directory: EventBase
+      run: dotnet pack /p:Version="0.0.${{ steps.buildnumber.outputs.build_number }}"  EventBase.Client
+    - name: Push
+      working-directory: EventBase
+      run: dotnet nuget push EventBase.Client/bin/Debug/EventBase.Client.0.0.${{ steps.buildnumber.outputs.build_number }}.nupkg  https://nuget.pkg.github.com/DinoRoar/index.json
+ 
+      
+      
+
 
     
