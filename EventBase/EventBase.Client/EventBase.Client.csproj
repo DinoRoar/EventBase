@@ -2,6 +2,10 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <PackageVersion></PackageVersion>
+        <Title>EventBase Client</Title>
+        <Authors>John Nicholas</Authors>
+        <RepositoryUrl>https://github.com/DinoRoar/EventBase</RepositoryUrl>
     </PropertyGroup>
 
 </Project>
