@@ -45,6 +45,6 @@ jobs:
         VERSION_STATIC: 0.0.${{ steps.buildnumber.outputs.build_number }}
         # API key to authenticate with NuGet server
         NUGET_KEY: ${{ secrets.GITHUB_TOKEN }}
-        NUGET_SOURCE: https://nuget.pkg.github.com/dinoroar/
+        NUGET_SOURCE: https://nuget.pkg.github.com/DinoRoar/
 
     
