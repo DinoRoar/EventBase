@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace EventBase.Client
 {
-    public class StreamEvent : Event
+    public class StreamEvent : Event, IHaveStreamName
     {
         public string StreamName { get; }
         public long StreamPosition { get; protected set; }
@@ -75,9 +75,10 @@ namespace EventBase.Client
             Event = @event;
         }
 
-        public virtual StreamEvent SetStreamPositions(int streamPosition, in int globalPosition)
+        public StreamEvent(CreateStreamEvent createStreamEvent,in long streamPosition, in long globalPosition)
+        :this(createStreamEvent.StreamName, streamPosition, globalPosition, DateTime.Now, createStreamEvent.Event )
         {
-            return new StreamEvent(Id, StreamName, streamPosition, globalPosition, CreatedDate, Event);
+            
         }
     }
 }

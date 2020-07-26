@@ -5,7 +5,7 @@ namespace EventBase.Client
 {
     public interface IEventStore
     {
-        void Append(StreamEvent streamEvent);
+        void Append(CreateStreamEvent createStreamEvent);
 
         void AddNewProjection(Projection projection);
 

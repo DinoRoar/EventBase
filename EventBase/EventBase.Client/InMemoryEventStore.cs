@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace EventBase.Client
 {
@@ -10,6 +11,8 @@ namespace EventBase.Client
         private readonly List<StreamEvent> _allEvents = new List<StreamEvent>();
         private readonly List<Projection> _projections = new List<Projection>();
         private readonly Dictionary<string, List<Action<StreamEvent>>> _subscriptions = new Dictionary<string, List<Action<StreamEvent>>>();
+
+        private readonly Mutex _writeMutex = new Mutex();
 
         public InMemoryEventStore()
         {
@@ -22,34 +25,74 @@ namespace EventBase.Client
             _projections.Add(new EventTypeProjection());
         }
 
-        public void Append(StreamEvent streamEvent)
+        public void Append(CreateStreamEvent createStreamEvent)
         {
-            StreamEvent @event;
-            var nextGlobalEventVersion = _allEvents.Count;
-            if (!_streams.ContainsKey(streamEvent.StreamName))
+            _writeMutex.WaitOne(TimeSpan.FromSeconds(1));
+            try
             {
-                CheckStreamPosition(streamEvent, 0);
-                @event = streamEvent.SetStreamPositions(0, nextGlobalEventVersion);
-                _streams.Add(@event.StreamName, new List<StreamEvent>() { @event});
-            }
-            else
-            {
-                var stream = _streams[streamEvent.StreamName];
-                var nextPosition = stream.Count;
+                var nextGlobalEventVersion = _allEvents.Count;
+                var streamPosition = GetStreamPosition(createStreamEvent);
 
-                if (streamEvent.StreamPosition != StreamPositions.Any)
+                if (streamPosition == StreamPositions.DoesNotExist)
                 {
-                    CheckStreamPosition(streamEvent, nextPosition);
+                    _streams.Add(createStreamEvent.StreamName, new List<StreamEvent>());
+                    streamPosition = 0;
                 }
 
-                @event = streamEvent.SetStreamPositions(nextPosition, nextGlobalEventVersion);
-                stream.Add(@event);
+                if (createStreamEvent.StreamPosition != StreamPositions.Any)
+                {
+                    CheckStreamPosition(createStreamEvent, streamPosition);
+                }
+
+                var @event = new StreamEvent(createStreamEvent, streamPosition, nextGlobalEventVersion);
+                _streams[createStreamEvent.StreamName].Add(@event);
+                _allEvents.Add(@event);
+
+                ExecuteSubscriptions(@event);
+                RunProjections(@event);
+            }
+            finally
+            {
+                _writeMutex.ReleaseMutex();
+            }
+        }
+
+        private void Append(ProjectedEvent projectedEvent)
+        {
+            _writeMutex.WaitOne(TimeSpan.FromSeconds(1));
+            try
+            {
+                var nextGlobalEventVersion = _allEvents.Count;
+                var streamPosition = GetStreamPosition(projectedEvent);
+                if (streamPosition == StreamPositions.DoesNotExist)
+                {
+                    _streams.Add(projectedEvent.StreamName, new List<StreamEvent>());
+                    streamPosition = 0;
+                }
+                var @event = projectedEvent.SetPositions(streamPosition, nextGlobalEventVersion);
+                _streams[projectedEvent.StreamName].Add(@event);
+                _allEvents.Add(@event);
+
+                ExecuteSubscriptions(@event);
+                RunProjections(@event);
+            }
+            finally
+            {
+                _writeMutex.ReleaseMutex();
             }
 
-            _allEvents.Add(@event);
+        }
 
-            ExecuteSubscriptions(@event);
-            RunProjections(@event);
+        private long GetStreamPosition(IHaveStreamName stream)
+        {
+
+            if (!_streams.ContainsKey(stream.StreamName))
+            {
+                return StreamPositions.DoesNotExist;
+            }
+
+            return _streams[stream.StreamName].Count;
+
         }
 
         private void ExecuteSubscriptions(StreamEvent @event)
@@ -110,7 +153,7 @@ namespace EventBase.Client
             return new StreamPositions(lastEvent.StreamPosition + 1, lastEvent.GlobalPosition + 1);
         }
 
-        private static void CheckStreamPosition(StreamEvent streamEvent, long currentPosition)
+        private static void CheckStreamPosition(CreateStreamEvent streamEvent, long currentPosition)
         {
             switch (streamEvent.StreamPosition)
             {

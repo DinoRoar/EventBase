@@ -10,14 +10,10 @@ namespace EventBase.Client
 
         }
 
-        public override StreamEvent SetStreamPositions(int streamPosition, in int globalPosition)
+        public ProjectedEvent SetPositions(in long streamPosition, in int globalPosition)
         {
-            var e = new ProjectedEvent(StreamName, this)
-            {
-                StreamPosition = streamPosition, 
-                GlobalPosition = globalPosition
-            };
-            return e;
+            return new ProjectedEvent(StreamName,
+                new StreamEvent(StreamName, streamPosition, globalPosition, DateTime.Now, Event));
         }
     }
 }

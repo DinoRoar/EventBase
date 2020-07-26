@@ -4,6 +4,7 @@ namespace EventBase.Client
     {
         public long StreamPosition { get; }
         public long GlobalPosition { get; }
+        
 
         public StreamPositions(long streamPosition, long globalPosition)
         {
@@ -13,5 +14,6 @@ namespace EventBase.Client
 
         public const long Any = -1;
         public const long CreateNewStream = -2;
+        public const long DoesNotExist = -3;
     }
 }
