@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="EventStreamService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="EventStreamService.cs" />
+  </ItemGroup>
+
+</Project>
