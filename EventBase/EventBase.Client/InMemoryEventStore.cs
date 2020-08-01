@@ -126,6 +126,35 @@ namespace EventBase.Client
                 _subscriptions.Add(streamName, new List<Action<StreamEvent>>());
             }
 
+            if (_streams.ContainsKey(streamName))
+            {
+                _streams[streamName].ForEach(onEvent);
+            }
+            
+            _subscriptions[streamName].Add(onEvent);
+        }
+
+        public void SubscribeToStream(string streamName, int position, Action<object> onEvent)
+        {
+            if (!_subscriptions.ContainsKey(streamName))
+            {
+                _subscriptions.Add(streamName, new List<Action<StreamEvent>>());
+            }
+
+            if (_streams.ContainsKey(streamName))
+            {
+                var stream = _streams[streamName];
+                if (stream.Count < position)
+                {
+                    throw new StreamToShortException(streamName);
+                }
+                var streamEvents = stream.Skip(position);
+                foreach (var streamEvent in streamEvents)
+                {
+                    onEvent(streamEvent);
+                }
+            }
+
             _subscriptions[streamName].Add(onEvent);
         }
 
@@ -186,6 +215,17 @@ namespace EventBase.Client
                     break;
                 }
             }
+        }
+
+
+    }
+
+    public class StreamToShortException : InvalidOperationException
+    {
+        public StreamToShortException(string streamName)
+        :base($"Invalid operation: {streamName} doesn't have enough events")
+        {
+            
         }
     }
 }
