@@ -40,7 +40,7 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
     - name: Pack
       working-directory: EventBase
-      run: dotnet pack /p:Version="0.0.${{ steps.buildnumber.outputs.build_number }}"  EventBase.Client
+      run: dotnet pack /p:Version="0.0.${{ steps.buildnumber.outputs.build_number }}-thisisatoy"  EventBase.Client
     - name: Push
 
       working-directory: EventBase
