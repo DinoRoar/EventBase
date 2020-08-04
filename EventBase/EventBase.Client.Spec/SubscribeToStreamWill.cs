@@ -120,7 +120,7 @@ namespace EventBase.Client.Spec
         }
 
         [Fact]
-        public async void SubscribingToStreamAtNonExistentPositionExplodes()
+        public void SubscribingToStreamAtNonExistentPositionExplodes()
         {
             var ut = new InMemoryEventStore();
             int totalEvents = 0;
