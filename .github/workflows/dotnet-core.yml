@@ -44,7 +44,7 @@ jobs:
     - name: Push
 
       working-directory: EventBase
-      run: dotnet nuget push EventBase.Client/bin/Debug/EventBase.Client.0.0.${{ steps.buildnumber.outputs.build_number }}.nupkg
+      run: dotnet nuget push EventBase.Client/bin/Debug/EventBase.Client.0.0.${{ steps.buildnumber.outputs.build_number }}-thisisatoy.nupkg
  
       
       
