@@ -28,7 +28,7 @@ jobs:
         dotnet-version: 3.1.101
         source-url: https://nuget.pkg.github.com/DinoRoar/index.json
       env:
-        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        NUGET_AUTH_TOKEN: ${{secrets.NUGER_API_KEY}}
     - name: Install dependencies
       working-directory: EventBase
       run: dotnet restore
