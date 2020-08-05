@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace EventBase.Client.Spec
 {
+    // ReSharper disable once InconsistentNaming
     public class InMemoryEventStore_SubscribeToStreamWill
     {
         [Fact]
@@ -92,7 +91,7 @@ namespace EventBase.Client.Spec
         }
 
         [Fact]
-        public async void WhenSubscribedToStreamThenWillGetAllEventsFromFirstposition()
+        public async void WhenSubscribedToStreamThenWillGetAllEventsFromFirstPosition()
         {
             var ut = new InMemoryEventStore();
 

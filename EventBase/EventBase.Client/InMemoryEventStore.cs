@@ -21,8 +21,8 @@ namespace EventBase.Client
 
         private void BuildDefaultProjections()
         {
-            _projections.Add(new CategoryProjection());
-            _projections.Add(new EventTypeProjection());
+            AddNewProjection(new CategoryProjection());
+            AddNewProjection(new EventTypeProjection());
         }
 
         public void Append(CreateStreamEvent createStreamEvent)
