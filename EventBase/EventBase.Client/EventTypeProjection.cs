@@ -10,7 +10,7 @@
 
         private static string BuildStreamName(StreamEvent arg)
         {
-            var eventType = arg.Event.EventType;
+            var eventType = arg.Event.Type;
             return $"et-{eventType}";
         }
     }

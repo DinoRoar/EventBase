@@ -7,11 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBase.Client", "EventBa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBase.Client.Spec", "EventBase.Client.Spec\EventBase.Client.Spec.csproj", "{147F49A2-C368-4C1C-919E-D64170B9BA97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBase.Server.Grpc", "EventBase.Server.Grpc\EventBase.Server.Grpc.csproj", "{6AE3AFE5-1AD1-40EF-B24B-40FB5C2543F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBase.Server.Grpc", "EventBase.Server.Grpc\EventBase.Server.Grpc.csproj", "{6AE3AFE5-1AD1-40EF-B24B-40FB5C2543F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBase.Server", "EventBase.Server\EventBase.Server.csproj", "{58DD69AF-86E7-4FAA-9172-96418C2687DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBase.Server", "EventBase.Server\EventBase.Server.csproj", "{58DD69AF-86E7-4FAA-9172-96418C2687DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBase.Server.Grpc.Spec", "EventBase.Server.Grpc.Spec\EventBase.Server.Grpc.Spec.csproj", "{14DE3DAC-E7C6-4DF1-976A-E13014FD351B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBase.Server.Grpc.Spec", "EventBase.Server.Grpc.Spec\EventBase.Server.Grpc.Spec.csproj", "{14DE3DAC-E7C6-4DF1-976A-E13014FD351B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBase.EventStoreAdapter", "EventBase.EventStoreAdapter\EventBase.EventStoreAdapter.csproj", "{F56C9CB3-F6AE-49C2-A6A9-0FB074267F61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{14DE3DAC-E7C6-4DF1-976A-E13014FD351B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14DE3DAC-E7C6-4DF1-976A-E13014FD351B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14DE3DAC-E7C6-4DF1-976A-E13014FD351B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F56C9CB3-F6AE-49C2-A6A9-0FB074267F61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F56C9CB3-F6AE-49C2-A6A9-0FB074267F61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F56C9CB3-F6AE-49C2-A6A9-0FB074267F61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F56C9CB3-F6AE-49C2-A6A9-0FB074267F61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

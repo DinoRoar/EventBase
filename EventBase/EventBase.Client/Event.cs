@@ -1,20 +1,33 @@
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 
 namespace EventBase.Client
 {
-    public class Event : HasId
+    public class Event : Message
+    {
+        public Event()
+        {
+        }
+
+        [JsonConstructor]
+        public Event(string id):base(id)
+        {
+        }
+    }
+
+    public class Message : HasId
     {
         public string Id { get; }
 
-        public string EventType => this.GetType().Name;
+        public string Type => this.GetType().Name;
 
-        public Event()
+        public Message()
         {
             Id = GetId();
         }
 
         [JsonConstructor]
-        public Event(string id)
+        public Message(string id)
         {
             Id = id;
         }

@@ -10,6 +10,7 @@ namespace EventBase.Client
         void AddNewProjection(Projection projection);
 
         void SubscribeToStream(string streamName, Action<StreamEvent> onEvent);
+        void SubscribeToStream(string streamName, int position, Action<object> onEvent);
 
         List<StreamEvent> ReadStream(string streamName);
 
