@@ -14,12 +14,30 @@ namespace EventBase.Core
         ///
         /// Just to give a flavor
         /// </summary>
+        /// <remarks>
+        /// There is a real tricky problem on reading streams. When file based need some concept of page size.
+        /// What is optimum file size? How much do we read from it?
+        /// Do we have chunks (ie files) then pages? There is a breakpoint at 256k buffer
+        ///   - but i think its simply that from that point its good performance to read.
+        /// Once we have these things then we are potentially using random access to open files
+        /// and then we need random access to be able to find the bytes for the single event in that.
+        /// </remarks>
         public long _eventIndexOffset = 0; // 
 
         public long _globalPosition = 0;
 
         private readonly List<PersistedEvent> _events = new List<PersistedEvent>();
 
+        /// <summary>
+        /// This is the index into the data from the streams
+        /// </summary>
+        ///
+        /// <remarks>
+        /// 32 bit entries is a *lot* - but only 2 gig! we are storing event position as a long (*10^19)
+        /// What would the storage space of that many entries be?
+        /// Does this need chopping and paging as well?
+        /// This structure needs to be as small as possible!
+        /// </remarks>
         private readonly Dictionary<string, List<IndexedStreamEvent>> _streams = new Dictionary<string, List<IndexedStreamEvent>>();
 
         public async IAsyncEnumerable<IEventPersistence.Event> GetAllEvents()
@@ -46,7 +64,7 @@ namespace EventBase.Core
             var persistedEvent = new PersistedEvent(_globalPosition, actualStreamPosition, @event);
 
             _events.Add(persistedEvent);
-            _streams[streamName].Add(new IndexedStreamEvent(streamName, actualStreamPosition, _globalPosition ));
+            _streams[streamName].Add(new IndexedStreamEvent(streamName, actualStreamPosition, _globalPosition));
             _globalPosition += 1;
 
             return Task.FromResult(new IEventPersistence.AppendEventResult(actualStreamPosition));
@@ -60,9 +78,9 @@ namespace EventBase.Core
             return Task.FromResult(new IEventPersistence.GetStreamPositionResult(_streams[streamName].Count));
         }
 
-        public async IAsyncEnumerable<IEventPersistence.Event> ReadStreamForward(string streamName)
+        public async IAsyncEnumerable<IEventPersistence.Event> ReadStreamForward(string streamName, long fromPosition)
         {
-            foreach (var streamEvent in _streams[streamName])
+            foreach (var streamEvent in _streams[streamName].Skip(Convert.ToInt32(fromPosition)))
             {
                 var persistedEvent = _events[Convert.ToInt32(streamEvent.GlobalEventPosition)];
                 yield return streamEvent.ToEvent(persistedEvent);
@@ -117,7 +135,7 @@ namespace EventBase.Core
 
             public IEventPersistence.Event ToEvent()
             {
-                return new IEventPersistence.Event(StreamName,StreamPosition, EventData, EventMetadata);
+                return new IEventPersistence.Event(StreamName, StreamPosition, EventData, EventMetadata);
             }
         }
     }

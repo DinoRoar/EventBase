@@ -10,7 +10,7 @@ namespace EventBase.Core
         IAsyncEnumerable<Event> GetAllEvents();
         Task<AppendEventResult> AppendEvent(Event @event);
         Task<GetStreamPositionResult> GetNextStreamPosition(string streamName);
-        IAsyncEnumerable<Event> ReadStreamForward(string streamName);
+        IAsyncEnumerable<Event> ReadStreamForward(string streamName, long fromPosition);
 
         public class Event
         {

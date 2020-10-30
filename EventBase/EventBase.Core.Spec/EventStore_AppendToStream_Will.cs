@@ -61,8 +61,6 @@ namespace EventBase.Core.Spec
                 underTest.Append(streamName, 2, new byte[0], new byte[0]));
         }
 
-
-
         [Fact]
         public async Task ReturnAllEventsInThePersistence()
         {
@@ -88,13 +86,31 @@ namespace EventBase.Core.Spec
             await underTest.Append("streamName2", EventStore.StreamPositions.Any, new byte[0], new byte[0]);
             await underTest.Append("streamName2", EventStore.StreamPositions.Any, new byte[0], new byte[0]);
 
-            var events = underTest.ReadStreamForward("streamName");
+            var events = underTest.ReadStreamForward("streamName", 0);
             var total = await events.CountAsync();
             Assert.Equal(1, total);
 
-            events = underTest.ReadStreamForward("streamName2");
+            events = underTest.ReadStreamForward("streamName2", 0);
             total = await events.CountAsync();
             Assert.Equal(2, total);
+        }
+
+        [Fact]
+        public async Task ReturnEventsByStream_FromReadPosition()
+        {
+            var underTest = new EventStore(_persistence);
+
+            await underTest.Append("streamName", EventStore.StreamPositions.Any, new byte[0], new byte[0]);
+            await underTest.Append("streamName", EventStore.StreamPositions.Any, new byte[0], new byte[0]);
+            await underTest.Append("streamName", EventStore.StreamPositions.Any, new byte[0], new byte[0]);
+
+            var events = underTest.ReadStreamForward("streamName", 1);
+            var total = await events.CountAsync();
+            Assert.Equal(2, total);
+
+            events = underTest.ReadStreamForward("streamName", 2);
+            total = await events.CountAsync();
+            Assert.Equal(1, total);
         }
     }
 }

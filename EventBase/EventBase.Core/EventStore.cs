@@ -58,20 +58,19 @@ namespace EventBase.Core
         }
 
 
+        public async IAsyncEnumerable<StreamEvent> ReadStreamForward(string streamName, long fromPosition)
+        {
+            await foreach (var e in _persistenceLayer.ReadStreamForward(streamName, fromPosition))
+            {
+                yield return new StreamEvent(e.StreamName, e.EventData, e.EventMetadata, e.StreamPosition);
+            }
+        }
 
         public class StreamPositions
         {
             public const long Create = -2;
             public const long Any = -1;
             public const long NewStream = 0;
-        }
-
-        public async IAsyncEnumerable<StreamEvent> ReadStreamForward(string streamName)
-        {
-            await foreach (var e in _persistenceLayer.ReadStreamForward(streamName))
-            {
-                yield return new StreamEvent(e.StreamName, e.EventData, e.EventMetadata, e.StreamPosition);
-            }
         }
 
         public class StreamEvent

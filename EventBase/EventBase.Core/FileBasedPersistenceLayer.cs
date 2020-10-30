@@ -20,7 +20,7 @@ namespace EventBase.Core
             throw new System.NotImplementedException();
         }
 
-        public IAsyncEnumerable<IEventPersistence.Event> ReadStreamForward(string streamName)
+        public IAsyncEnumerable<IEventPersistence.Event> ReadStreamForward(string streamName, long fromPosition)
         {
             throw new System.NotImplementedException();
         }
